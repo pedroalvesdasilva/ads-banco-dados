@@ -1,27 +1,29 @@
 <?php
-    ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
+ini_set ('display_errors', 1);
+ini_set('display_startup_erros', 1);
+error_reporting(E_ALL);
 
-    //verifica se existe conexão  com bd, caso não tenta criar uma nova
-    $conexao = mysqli_connect("localhost", "daylton", "123456") //porta usuário, senha
-    or die("Erro ao conectar com o banco de dados"); //caso não consiga conectar mostra a mensagem de erro mostrada na conexão
+require_once 'pessoa.php';
 
-    $select_db = mysqli_select_db($conexao, "novo"); //seleciona o banco de dados
+if ($_server['REQUEST_METHOD'] === 'POST') {
+    $nome = $_POST["NOME"] ?? '';
+    $user = $_POST["user"] ?? '';
+    $email = $_POST["email"] ?? '';
 
-    //Abaixo atribuídos os valores provenientes do formulário pelo método POST
-    $nome = $_POST['nome'];
-    $user = $_POST['user'];
-    $email = $_POST['email'];
+    $pessoa = new Pessoa($nome, $user, $email);
 
-    $string_sql = "INSERT INTO pessoa (id, nome, user, email) VALUES (null, '$nome', '$user', '$email')"; //comando SQL para inserir os dados no banco de dados
-
-    mysqli_query($conexao, $string_sql); //Realiza a consulta
-
-    if(mysqli_affected_rows($conexao) == 1){ //verifica se a consulta foi realizada com sucesso
-        echo "<p>Dados inseridos com sucesso!</p>"; //mensagem de sucesso
-        echo '<a href="index.php">Voltar</a>'; //link para voltar a página inicial
+    if ($pessoa->inserir()) {
+        echo "<p>Cadastro feito com sucesso</p><br>";
+        echo '<a href="index.html">Voltar para home</a><br/>';
+        header("refresh:3;url-index.html");
+        echo 'Redirencionamento a página em 3 segndos!';
     } else {
-        echo "Erro, não foi possível inserir no banco de dados";
-
-        mysqli_close($conexao); //fecha a conexão com o banco de dados
+        echo "Erro, nãao foi possível inserir no banco de dados<br/>";
+        header("refresh:3;url=index.php");
+        echo 'Redirecionamento a página em 3 segundos!';
     }
+} else {
+    header("Locaiton: index.php");
+    exit();
+}
 ?>
