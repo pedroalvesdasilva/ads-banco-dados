@@ -15,7 +15,7 @@ class Pessoa {
     public function inserir(){
         try {
             $pdo = Conexao::getConexao();
-            $aql = "INSERT INTO pessoa (nome, user, email) VALUES (:nome, :user, :email)";
+            $sql = "INSERT INTO pessoa (nome, user, email) VALUES (:nome, :user, :email)";
             $stmt = $pdo->prepare($sql);
 
             $stmt->execute ( [
@@ -25,8 +25,20 @@ class Pessoa {
              ]);
 
         return $stmt->rowCount() > 0;
-        } catch (PODException $e) {
+        } catch (PDOException $e) {
             return false;
+        }
+    }
+    //Metodo consultador todos
+          public static function listarTodos () {
+            try { 
+            $pdo= Conexao::getConexao();
+            $sql = "SELECT * FROM pessoa";
+            $stmt = $pdo->query($sql);
+            // Retorna um array com todos os registros
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            return [];
         }
     }
 }
