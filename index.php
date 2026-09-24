@@ -8,6 +8,7 @@
 <body>
     
     <h3>Formulário de Cadastro</h3>
+    <p><a href="consulta.php">Consultar Cadastro</a></p>
     <form action="insere.php" method="post">
         <label for="nome">Nome: </label> 
         <input type="text" name="nome" />
